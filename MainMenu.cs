@@ -6,6 +6,7 @@ using Orchard.Core.Navigation.Models;
 using Orchard.Localization;
 using Orchard.UI.Navigation;
 using Orchard.Core.Title.Models;
+using System.Globalization;
 
 namespace PJS.Bootstrap {
     public class MainMenu : IMenuProvider {
@@ -24,7 +25,7 @@ namespace PJS.Bootstrap {
                     .Query<MenuPart, MenuPartRecord>()
                     .Where(x => x.MenuId == menu.Id)
                     .List()
-                    .Select(x => Convert.ToInt32(decimal.Parse(x.MenuPosition)))
+                    .Select(x => Convert.ToInt32(decimal.Parse(x.MenuPosition, NumberStyles.Any, CultureInfo.InvariantCulture)))
                     .Max();
 
                 var itemCount = maxPosition + 1;
