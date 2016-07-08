@@ -21,14 +21,13 @@ namespace PJS.Bootstrap {
         public Localizer T { get; set; }
         public void GetMenu(IContent menu, NavigationBuilder builder) {
             if (menu.As<TitlePart>().Title == "Main Menu") {
-                var maxPosition = _contentManager
+                var menuParts = _contentManager
                     .Query<MenuPart, MenuPartRecord>()
                     .Where(x => x.MenuId == menu.Id)
-                    .List()
-                    .Select(x => Convert.ToInt32(decimal.Parse(x.MenuPosition, NumberStyles.Any, CultureInfo.InvariantCulture)))
-                    .Max();
+                    .OrderBy(x => x.MenuPosition)
+                    .List();
 
-                var itemCount = maxPosition + 1;
+                var itemCount = Convert.ToInt32(decimal.Parse(menuParts.Last().MenuPosition, NumberStyles.Any, CultureInfo.InvariantCulture)) + 1;
 
                 if (_orchardServices.WorkContext.CurrentUser != null) {
                     builder.Add(T(_orchardServices.WorkContext.CurrentUser.UserName), itemCount.ToString(), item => item.Url("#").AddClass("menuUserName"));
